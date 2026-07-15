@@ -25,12 +25,16 @@ BQ_TABLE = "fred_series"
 
 # Add / remove series here. Key = FRED series ID, value = human label.
 SERIES = {
-    "CPIAUCSL": "cpi_all_urban",
-    "MORTGAGE30US": "mortgage_30yr_fixed",
-    "DGS10": "treasury_10yr",
-    "DGS5": "treasury_5yr",
-    "DGS2": "treasury_2yr",
-    "T10Y2Y": "treasury_10yr_2yr_spread",
+    "CPIAUCSL": "CPI Inflation",
+    "MORTGAGE30US": "30 Yr Mortgage",
+    "DGS10": "10 Yr Treasury",
+    "DGS5": "5 Yr Treasury",
+    "DGS2": "2 Yr Treasury",
+    "T10Y2Y": "10yr-2yr Spread",
+    "TGCRRATE": "Tri-Party Repo",
+    "SOFR": "SOFR",
+    "CSUSHPINSA": "Home Price Index",
+    "COMREPUSQ159N": "CRE Price Index"
 }
 
 
