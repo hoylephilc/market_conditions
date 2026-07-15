@@ -1,0 +1,37 @@
+name: Monthly Market Conditions Pull
+
+on:
+  schedule:
+    # Runs at 13:00 UTC on the 2nd of every month (gives FRED time to post
+    # the prior month's data). Cron is UTC always.
+    - cron: "0 13 2 * *"
+  workflow_dispatch: {}  # allows manual trigger from the Actions tab
+
+jobs:
+  pull-data:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Write GCP service account key
+        run: echo '${{ secrets.GCP_SA_KEY }}' > gcp-sa-key.json
+
+      - name: Pull FRED data into BigQuery
+        env:
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+          GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+          GOOGLE_APPLICATION_CREDENTIALS: gcp-sa-key.json
+        run: python ingest/pull_fred.py
+
+      - name: Clean up credentials
+        if: always()
+        run: rm -f gcp-sa-key.json
