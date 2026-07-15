@@ -23,27 +23,37 @@ GCP_PROJECT_ID = os.environ["GCP_PROJECT_ID"]
 BQ_DATASET = os.environ.get("BQ_DATASET", "market_conditions_raw")
 BQ_TABLE = "fred_series"
 
-# Add / remove series here. Key = FRED series ID, value = human label.
+# Add / remove series here. Key = FRED series ID, value = config dict.
+# "label" is the display name. "units" is an optional FRED transform --
+# "pc1" = percent change from year ago (used for CPI YoY%); omit for the
+# raw level (default "lin").
 SERIES = {
-    "CPIAUCSL": "CPI Inflation",
-    "MORTGAGE30US": "30 Yr Mortgage",
-    "DGS10": "10 Yr Treasury",
-    "DGS5": "5 Yr Treasury",
-    "DGS2": "2 Yr Treasury",
-    "T10Y2Y": "10yr-2yr Spread",
-    "TGCRRATE": "Tri-Party Repo",
-    "SOFR": "SOFR",
-    "CSUSHPINSA": "Home Price Index",
-    "COMREPUSQ159N": "CRE Price Index"
+    "CPIAUCSL": {"label": "CPI Inflation", "units": "pc1"},
+    "MORTGAGE30US": {"label": "30 Yr Mortgage"},
+    "DGS30": {"label": "30 Yr Treasury"},
+    "DGS20": {"label": "20 Yr Treasury"},
+    "DGS10": {"label": "10 Yr Treasury"},
+    "DGS5": {"label": "5 Yr Treasury"},
+    "DGS2": {"label": "2 Yr Treasury"},
+    "DGS1": {"label": "1 Yr Treasury"},
+    "DGS3MO": {"label": "3 Mo Treasury"},
+    "DGS1MO": {"label": "1 Mo Treasury"},
+    "T10Y2Y": {"label": "10yr-2yr Spread"},
+    "TGCRRATE": {"label": "Tri-Party Repo"},
+    "SOFR": {"label": "SOFR"},
+    "CSUSHPINSA": {"label": "Home Price Index"},
+    "COMREPUSQ159N": {"label": "CRE Price Index"},
 }
 
 
 def pull_series(fred: Fred) -> pd.DataFrame:
     """Pull each configured series and stack into one long-format DataFrame."""
     frames = []
-    for series_id, label in SERIES.items():
+    for series_id, config in SERIES.items():
+        label = config["label"]
+        units = config.get("units", "lin")  # "lin" = raw level, FRED's default
         try:
-            s = fred.get_series(series_id)
+            s = fred.get_series(series_id, units=units)
         except Exception as e:
             print(f"WARNING: failed to pull {series_id} ({label}): {e}", file=sys.stderr)
             continue
