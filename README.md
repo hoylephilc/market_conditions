@@ -23,10 +23,17 @@ it directly in BigQuery's console or Looker Studio while you decide what the
    sandbox table expiry).
 3. Create a service account with BigQuery Data Editor + Job User roles,
    download the JSON key.
-4. In your GitHub repo settings → Secrets and variables → Actions, add:
+4. In your GitHub repo settings → Secrets and variables → Actions, add these
+   repository secrets:
    - `FRED_API_KEY`
-   - `GCP_SA_KEY` (paste the full JSON key contents)
-   - `GCP_PROJECT_ID`
+   - `GCP_PROJECT_ID` — e.g. `project-e9dd9786-4354-4909-84c`
+   - `WIF_PROVIDER` — full resource name, format:
+     `projects/PROJECT_NUMBER/locations/global/workloadIdentityPools/github-pool/providers/github-provider`
+   - `WIF_SERVICE_ACCOUNT` — e.g.
+     `market-conditions-loader@project-e9dd9786-4354-4909-84c.iam.gserviceaccount.com`
+
+   No JSON key needed -- authentication happens via Workload Identity
+   Federation (short-lived tokens, nothing to leak or rotate).
 5. `pip install -r requirements.txt` locally to test `ingest/pull_fred.py` before
    trusting the scheduled job.
 
