@@ -41,7 +41,7 @@ SERIES = {
     "T10Y2Y": {"label": "10yr-2yr Spread"},
     "TGCRRATE": {"label": "Tri-Party Repo"},
     "SOFR": {"label": "SOFR"},
-    "CSUSHPINSA": {"label": "Home Price Index"},
+    "CSUSHPINSA": {"label": "House Price Index", "units": "pc1"},
     "COMREPUSQ159N": {"label": "CRE Price Index"},
 }
 
