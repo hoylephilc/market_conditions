@@ -48,7 +48,7 @@ def pull_series(fred: Fred) -> pd.DataFrame:
         df.columns = ["date", "value"]
         df["series_id"] = series_id
         df["label"] = label
-        df["pulled_at"] = datetime.utcnow().isoformat()
+        df["pulled_at"] = pd.Timestamp.utcnow()
         frames.append(df)
 
     if not frames:
