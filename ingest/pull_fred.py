@@ -142,7 +142,7 @@ def generate_market_commentary(df: pd.DataFrame) -> None:
         )
         
         response = ai_client.models.generate_content(
-            model='gemini-1.5-flash',
+            model='gemini-2.5-flash',
             contents=prompt
         )
         commentary_text = response.text.strip()
